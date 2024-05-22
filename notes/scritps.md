@@ -19,4 +19,9 @@ Here we get a version conflict, se we need to downgrade `eslint` to `8.x`
 npm i @taquito/taquito@20.0.0-RC.0 @taquito/beacon-wallet@20.0.0-RC.0 @airgap/beacon-dapp
 ```
 
+## To add routing
+```
+npm install react-router-dom localforage match-sorter sort-by
+```
+
 
