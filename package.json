@@ -13,8 +13,12 @@
     "@airgap/beacon-dapp": "^4.2.2",
     "@taquito/beacon-wallet": "^20.0.0-RC.0",
     "@taquito/taquito": "^20.0.0-RC.0",
+    "localforage": "^1.10.0",
+    "match-sorter": "^6.3.4",
     "react": "^18.3.1",
-    "react-dom": "^18.3.1"
+    "react-dom": "^18.3.1",
+    "react-router-dom": "^6.23.1",
+    "sort-by": "^1.2.0"
   },
   "devDependencies": {
     "@types/react": "^18.3.2",
