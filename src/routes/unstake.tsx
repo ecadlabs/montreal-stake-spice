@@ -1,12 +1,9 @@
-import { Link } from "react-router-dom";
+import Content from '../components/Content';
 
 const Unstake = () => {
-    return (
-        <div>
-            <h1>Unstake</h1>
-            <Link to="/dashboard">Dashboard</Link>
-        </div>
-    );
+  return (
+    <Content />
+  );
 }
 
 export default Unstake;

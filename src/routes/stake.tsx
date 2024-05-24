@@ -1,12 +1,11 @@
-import { Link } from "react-router-dom";
+import Content from '../components/Content';
+
 
 const Stake = () => {
-    return (
-        <div>
-            <h1>Stake</h1>
-            <Link to="/dashboard">Dashboard</Link>
-        </div>
-    );
+  return (
+
+    <Content />
+  );
 }
 
 export default Stake;

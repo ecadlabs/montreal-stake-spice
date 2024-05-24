@@ -1,0 +1,32 @@
+.content-container {
+  width: 100%;
+  position: absolute;
+  display: flex;
+  justify-content: center;
+  top: 20%;
+}
+
+.table-container {
+  align-items: center;
+  width: 60%;
+}
+
+table {
+  border: 1px solid;
+  width: 100%;
+}
+
+table td {
+  padding-bottom: 50px;
+  padding-top: 1px;
+  border-top: 1px solid;
+}
+
+table td h3 {
+  margin-top: 2px;
+}
+
+#dashboard-link {
+  position: absolute;
+  top: 10px;
+}
