@@ -42,6 +42,24 @@ const Root = () => {
         }
     }));
 
+    const createNewWallet = () => {
+        return new BeaconWallet({
+            name: "Staking dApp",
+            network: {
+                type: NetworkType.PARISNET,
+                rpcUrl: rpcUrl
+            }
+        });
+    }
+
+    const disconnectWallet = async () => {
+        await wallet.clearActiveAccount();
+        await wallet.disconnect();
+        setWallet(createNewWallet());
+        tezosToolkit?.setWalletProvider(wallet);
+        navigate('/');
+    }
+
     const [tezosToolkit, setTezosToolkit] = useState<TezosToolkit | null>(null);
 
     const location = window.location.pathname;
@@ -93,7 +111,7 @@ const Root = () => {
     ) : (
         <Routes>
             <Route path="/" element={<Connect wallet={wallet} />} />
-            <Route path="/dashboard" element={<Dashboard />} />
+            <Route path="/dashboard" element={<Dashboard address={activeAccount?.address} wallet={wallet} disconnect={disconnectWallet} />} />
             <Route path="/delegate" element={<Delegate />} />
             <Route path="/end-delegation" element={<EndDelegation />} />
             <Route path="/stake" element={<Stake />} />

@@ -8,3 +8,5 @@ export type LogEntry = {
 };
 
 export type AppendLogParams = LogEntry;
+
+export type Action<T> = (_params: T) => void;
