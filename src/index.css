@@ -191,6 +191,24 @@ h1 {
   cursor: pointer;
 }
 
+.back {
+  margin-left: 15px;
+  margin-top: 10px;
+  color: #aaa;
+  float: left;
+  font-size: 28px;
+  font-weight: bold;
+  border: 1px solid #aaa;
+  border-radius: 15px;
+}
+
+.back:hover,
+.back:focus {
+  color: black;
+  text-decoration: none;
+  cursor: pointer;
+}
+
 .top-line {
   border-top: #ddd 1px solid;
 }
@@ -236,4 +254,8 @@ h1 {
 
 .label {
   
+}
+
+.center-text {
+  text-align: center;
 }

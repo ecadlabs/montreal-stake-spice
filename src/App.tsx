@@ -9,9 +9,6 @@ import Connect from './routes/connect';
 import Dashboard from './routes/dashboard';
 import Delegate from './routes/delegate';
 import EndDelegation from './routes/end-delegation';
-import Stake from './routes/stake';
-import Unstake from './routes/unstake';
-import FinalizeUnstake from './components/finalize-unstake';
 import { AccountInfo, BeaconEvent, NetworkType } from "@airgap/beacon-dapp";
 import { AppendLogParams } from "./types";
 import { useEffect, useState } from "react";
@@ -147,8 +144,6 @@ const Root = () => {
                 />} />
             <Route path="/delegate" element={<Delegate tezosToolkit={tezosToolkit!} />} />
             <Route path="/end-delegation" element={<EndDelegation />} />
-            <Route path="/stake" element={<Stake />} />
-            <Route path="/unstake" element={<Unstake />} />
         </Routes>
     );
 }

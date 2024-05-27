@@ -7,6 +7,7 @@ import { formatTez } from "../helpers";
 import FinalizeUnstake from "../components/finalize-unstake";
 import { TezosToolkit } from "@taquito/taquito";
 import { useState } from "react";
+import Stake from "../components/stake";
 
 const Dashboard = ({
     address,
@@ -33,6 +34,10 @@ const Dashboard = ({
     type State = 'None' | 'Staking' | 'Unstaking' | 'Finalizing Unstake';
     const [state, setState] = useState<State>('None');
 
+    const stake = () => {
+        setState('Staking');
+    }
+
     const finalizeUnstake = () => {
         setState('Finalizing Unstake');
     }
@@ -53,12 +58,6 @@ const Dashboard = ({
 
     return (
         <div>
-            <Link to="/">Connect</Link><br />
-            <Link to="/delegate">Delegate</Link><br />
-            <Link to="/stake">Stake</Link><br />
-            <Link to="/unstake">Unstake</Link><br />
-            <Link to="/finalize-unstake">Finalize Unstake</Link><br />
-
             <ConnectionHeader address={address} wallet={wallet} disconnect={disconnect} />
             <div className="main-container rounded-top">
                 <div className="evenly-sized-items">
@@ -80,6 +79,15 @@ const Dashboard = ({
                         <h5>Baker</h5>
                         <p className="wrap-words">{delegate}</p>
                     </div>
+                </div>
+                <div className="evenly-sized-items">
+                    {delegate && (
+                        <button className="button half-parent" onClick={() => { }}>Unstake</button>
+                    )}
+                    {!delegate && (
+                        <button className="button active half-parent" onClick={() => { }}>Delegate</button>
+                    )}
+                    <button className={`button ${delegate ? 'active' : 'disabled'} half-parent`} onClick={stake}>Stake</button>
                 </div>
             </div>
             <div className="main-container rounded-bottom">
@@ -116,6 +124,9 @@ const Dashboard = ({
             </div>
             {state === 'Finalizing Unstake' && (
                 <FinalizeUnstake tezosToolkit={tezosToolkit} closeModal={finalizeUnstakeClosed} finalizableBalance={getFinalizableBalance()} />
+            )}
+            { state === 'Staking' && (
+                <Stake tezosToolkit={tezosToolkit} closeModal={finalizeUnstakeClosed} availableBalance={balance!} />
             )}
         </div>
     );
