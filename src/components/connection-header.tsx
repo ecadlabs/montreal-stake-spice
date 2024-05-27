@@ -14,7 +14,7 @@ const ConnectionHeader = ({ address, wallet, disconnect }: { address: string | u
     }
 
     return (
-        <div className="main-container">
+        <div className="main-container rounded">
             <div className="split-items">
                 <h2>ꜩ Tezos</h2>
                 <div className="hamburger-menu" onClick={openModal}>
@@ -23,7 +23,7 @@ const ConnectionHeader = ({ address, wallet, disconnect }: { address: string | u
             </div>
 
             {(modalVisible) && (
-                <div className="disconnect-modal">
+                <div className={`modal ${modalVisible && 'open'}`}>
                     <div className="modal-content">
                         <span className="close" onClick={closeModal}>&times;</span>
                         <p>{address}</p>

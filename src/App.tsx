@@ -1,9 +1,7 @@
 import {
     BrowserRouter,
-    createBrowserRouter,
     Navigate,
     Route,
-    RouterProvider,
     Routes,
     useNavigate,
 } from "react-router-dom";
@@ -13,12 +11,13 @@ import Delegate from './routes/delegate';
 import EndDelegation from './routes/end-delegation';
 import Stake from './routes/stake';
 import Unstake from './routes/unstake';
-import FinalizeUnstake from './routes/finalize-unstake';
+import FinalizeUnstake from './components/finalize-unstake';
 import { AccountInfo, BeaconEvent, NetworkType } from "@airgap/beacon-dapp";
 import { AppendLogParams } from "./types";
 import { useEffect, useState } from "react";
 import { BeaconWallet } from "@taquito/beacon-wallet";
 import { TezosToolkit } from "@taquito/taquito";
+import { UnstakeRequestsResponse } from "@taquito/rpc";
 
 const Root = () => {
 
@@ -33,6 +32,10 @@ const Root = () => {
     }
 
     const [activeAccount, setActiveAccount] = useState<AccountInfo | null>(null);
+    const [balance, setBalance] = useState<number | null>(null);
+    const [stakedBalance, setStakedBalance] = useState<number | null>(null);
+    const [delegate, setDelegate] = useState<string | null>(null);
+    const [unstakeRequests, setUnstakeRequests] = useState<UnstakeRequestsResponse>(null);
 
     const [wallet, setWallet] = useState<BeaconWallet>(new BeaconWallet({
         name: "Staking dApp",
@@ -81,12 +84,28 @@ const Root = () => {
             }
         });
         await wallet.client.subscribeToEvent(BeaconEvent.ACTIVE_ACCOUNT_SET, onActiveAccountSet);
-        const aliceTezosToolkit = new TezosToolkit(rpcUrl);
-        aliceTezosToolkit.setWalletProvider(wallet);
+        const tezos = new TezosToolkit(rpcUrl);
+        tezos.setWalletProvider(wallet);
+        setTezosToolkit(tezos);
+        await refreshData(tezos);
+        console.log(`expectedPath: ${expectedPath}`);
+    }
+
+    const refreshData = async(tezos?: TezosToolkit) => {
+        if (!tezos) {
+            tezos = tezosToolkit!;
+        }
         const activeAccount = await wallet.client.getActiveAccount();
         setActiveAccount(activeAccount ?? null);
-        console.log(activeAccount);
         if (activeAccount) {
+            const balance = await tezos.tz.getBalance(activeAccount.address);
+            setBalance(Number(balance));
+            const delegate = await tezos.tz.getDelegate(activeAccount.address);
+            setDelegate(delegate);
+            const stakedBalance = await tezos.rpc.getStakedBalance(activeAccount.address);
+            setStakedBalance(Number(stakedBalance));
+            const unstakeRequests = await tezos.rpc.getUnstakeRequests(activeAccount.address);
+            setUnstakeRequests(unstakeRequests);
             if (location === '/') {
                 expectedPath = '/dashboard';
             } else {
@@ -94,11 +113,14 @@ const Root = () => {
             }
         } else {
             expectedPath = '/';
+            setBalance(null);
+            setDelegate(null);
+            setStakedBalance(null);
+            setUnstakeRequests(null);
         }
         if (expectedPath !== location) {
             navigate(expectedPath);
         }
-        console.log(`expectedPath: ${expectedPath}`);
     }
 
     useEffect(() => {
@@ -111,12 +133,22 @@ const Root = () => {
     ) : (
         <Routes>
             <Route path="/" element={<Connect wallet={wallet} />} />
-            <Route path="/dashboard" element={<Dashboard address={activeAccount?.address} wallet={wallet} disconnect={disconnectWallet} />} />
-            <Route path="/delegate" element={<Delegate />} />
+            <Route path="/dashboard" element={
+                <Dashboard 
+                    address={activeAccount?.address} 
+                    wallet={wallet} 
+                    disconnect={disconnectWallet} 
+                    delegate={delegate} 
+                    balance={balance} 
+                    stakedBalance={stakedBalance} 
+                    unstakeRequests={unstakeRequests} 
+                    tezosToolkit={tezosToolkit!}
+                    refreshData={initateTezosToolkit}
+                />} />
+            <Route path="/delegate" element={<Delegate tezosToolkit={tezosToolkit!} />} />
             <Route path="/end-delegation" element={<EndDelegation />} />
             <Route path="/stake" element={<Stake />} />
             <Route path="/unstake" element={<Unstake />} />
-            <Route path="/finalize-unstake" element={<FinalizeUnstake />} />
         </Routes>
     );
 }

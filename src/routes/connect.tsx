@@ -19,7 +19,7 @@ const Connect = ({ wallet }: { wallet: BeaconWallet }) => {
         <div className="main-container">
             <h1>ꜩ Tezos</h1>
             <h1>Earn rewards with Tezos <br /> staking solutions</h1>
-            <button className="active" onClick={connectWallet}>Connect Wallet</button>
+            <button className="button active" onClick={connectWallet}>Connect Wallet</button>
             <Link to="/dashboard">Dashboard</Link>
         </div>
     );
