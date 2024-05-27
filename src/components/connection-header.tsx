@@ -26,8 +26,10 @@ const ConnectionHeader = ({ address, wallet, disconnect }: { address: string | u
                 <div className={`modal ${modalVisible && 'open'}`}>
                     <div className="modal-content">
                         <span className="close" onClick={closeModal}>&times;</span>
-                        <p>{address}</p>
-                        <button onClick={() => disconnect()}>Disconnect</button>
+                        <div className="main-container">
+                            <p>{address}</p>
+                            <button className="button accent full-width" onClick={() => disconnect()}>Disconnect</button>
+                        </div>
                     </div>
                 </div>
             )}
