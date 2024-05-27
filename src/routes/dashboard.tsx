@@ -1,4 +1,3 @@
-import { Link } from "react-router-dom";
 import ConnectionHeader from "../components/connection-header";
 import { BeaconWallet } from "@taquito/beacon-wallet";
 import { Action } from "../types";
@@ -8,6 +7,7 @@ import FinalizeUnstake from "../components/finalize-unstake";
 import { TezosToolkit } from "@taquito/taquito";
 import { useState } from "react";
 import Stake from "../components/stake";
+import Unstake from "../components/unstake";
 
 const Dashboard = ({
     address,
@@ -38,6 +38,10 @@ const Dashboard = ({
         setState('Staking');
     }
 
+    const unstake = () => {
+        setState('Unstaking');
+    }
+
     const finalizeUnstake = () => {
         setState('Finalizing Unstake');
     }
@@ -49,11 +53,18 @@ const Dashboard = ({
         return unstakeRequests.finalizable.reduce((acc, request) => acc + Number(request.amount), 0);
     }
 
-    const finalizeUnstakeClosed = (success: boolean) => {
+    const modalClosed = (success: boolean) => {
         setState('None');
         if (success) {
             refreshData();
         }
+    }
+
+    const getPendingUnstakeCount = () => {
+        if (!unstakeRequests) {
+            return 0;
+        }
+        return unstakeRequests.finalizable.length + unstakeRequests.unfinalizable.requests.length;
     }
 
     return (
@@ -82,7 +93,7 @@ const Dashboard = ({
                 </div>
                 <div className="evenly-sized-items">
                     {delegate && (
-                        <button className="button half-parent" onClick={() => { }}>Unstake</button>
+                        <button className="button half-parent" onClick={unstake}>Unstake</button>
                     )}
                     {!delegate && (
                         <button className="button active half-parent" onClick={() => { }}>Delegate</button>
@@ -90,16 +101,15 @@ const Dashboard = ({
                     <button className={`button ${delegate ? 'active' : 'disabled'} half-parent`} onClick={stake}>Stake</button>
                 </div>
             </div>
-            <div className="main-container rounded-bottom">
-                <div className="full-width">
-                    <div className="split-items">
-                        <span>Pending Unstake</span>
-                        <span>{unstakeRequests && (unstakeRequests.finalizable.length + unstakeRequests.unfinalizable.requests.length)}</span>
-                    </div>
-                    {unstakeRequests && (
+            {(getPendingUnstakeCount() > 0) && (
+                <div className="main-container rounded-bottom">
+                    <div className="full-width">
+                        <div className="split-items">
+                            <span>Pending Unstake</span>
+                            <span>({getPendingUnstakeCount()})</span>
+                        </div>
                         <div className="full-width">
-                            <h5>Finalizable</h5>
-                            {unstakeRequests.finalizable.map((request, index) => (
+                            {unstakeRequests?.finalizable && unstakeRequests.finalizable.map((request, index) => (
                                 <div key={index} className="split-items top-line">
                                     <div>
                                         <p>Amount: {formatTez(request.amount)} ꜩ</p>
@@ -108,25 +118,25 @@ const Dashboard = ({
                                     <button className="button accent half-parent" onClick={finalizeUnstake}>Finalize</button>
                                 </div>
                             ))}
-                            <h2>TODO: Show Unfinalizable</h2>
-                            {/* <h5>Unfinalizable</h5>
-                            <ul>
-                                {unstakeRequests.unfinalizable.requests.map((request, index) => (
-                                    <li key={index}>
-                                        <p>Amount: {request.balance} tez</p>
-                                        <p>Requester: {request.requester}</p>
-                                    </li>
-                                ))}
-                            </ul> */}
+
+                            {unstakeRequests?.unfinalizable && unstakeRequests.unfinalizable.requests.map((request, index) => (
+                                <div className="split-items top-line" key={index}>
+                                    <p>Amount: {formatTez(request.amount)} tez</p>
+                                    <p>Cycle: {request.cycle}</p>
+                                </div>
+                            ))}
                         </div>
-                    )}
+                    </div>
                 </div>
-            </div>
-            {state === 'Finalizing Unstake' && (
-                <FinalizeUnstake tezosToolkit={tezosToolkit} closeModal={finalizeUnstakeClosed} finalizableBalance={getFinalizableBalance()} />
             )}
-            { state === 'Staking' && (
-                <Stake tezosToolkit={tezosToolkit} closeModal={finalizeUnstakeClosed} availableBalance={balance!} />
+            {state === 'Finalizing Unstake' && (
+                <FinalizeUnstake tezosToolkit={tezosToolkit} closeModal={modalClosed} finalizableBalance={getFinalizableBalance()} />
+            )}
+            {state === 'Staking' && (
+                <Stake tezosToolkit={tezosToolkit} closeModal={modalClosed} availableBalance={balance!} />
+            )}
+            {state === 'Unstaking' && (
+                <Unstake tezosToolkit={tezosToolkit} closeModal={modalClosed} stakedBalance={stakedBalance!} />
             )}
         </div>
     );
