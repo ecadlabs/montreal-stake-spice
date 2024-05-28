@@ -99,7 +99,7 @@ const Unstake = ({
           <div className="main-container">
             <h1>Confirm</h1>
             <div>
-              <label className="label">Available</label><br />
+              <label className="label">Staked</label><br />
               <input className="input full-width" type="text" value={stakedBalance / 1000000} readOnly />
             </div>
             <div>

@@ -82,7 +82,7 @@ const Stake = ({
             <h1>Disclaimer</h1>
             <p className='center-text'>By staking, you put your balance at risk and <br /> may lose all your money.</p>
             <div>
-              <input type='checkbox' id='agree' name='agree' checked={agree} onClick={() => setAgree(!agree)} />
+              <input type='checkbox' id='agree' name='agree' checked={agree} onChange={() => setAgree(!agree)} />
               <label htmlFor='agree'>I confirm that I have read and agreed<br /> with the Terms of Service.</label>
             </div>
             <button className="button active full-width" onClick={() => step2()}>Continue</button>

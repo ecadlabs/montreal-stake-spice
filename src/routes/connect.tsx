@@ -1,8 +1,9 @@
 import { NetworkType } from "@airgap/beacon-dapp";
 import { BeaconWallet } from "@taquito/beacon-wallet";
 import { useNavigate } from "react-router-dom";
+import { Action } from "../types";
 
-const Connect = ({ wallet }: { wallet: BeaconWallet }) => {
+const Connect = ({ wallet, refreshData }: { wallet: BeaconWallet, refreshData: Action<void> }) => {
 
     const navigate = useNavigate();
 
@@ -12,6 +13,7 @@ const Connect = ({ wallet }: { wallet: BeaconWallet }) => {
                 type: NetworkType.PARISNET,
             },
         });
+        refreshData();
         navigate('/dashboard');
     }
 

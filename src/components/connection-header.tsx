@@ -14,11 +14,11 @@ const ConnectionHeader = ({ address, wallet, disconnect }: { address: string | u
     }
 
     return (
-        <div className="main-container rounded">
+        <div className="main-container rounded not-too-narrow">
             <div className="split-items">
                 <h2>ꜩ Tezos</h2>
                 <div className="hamburger-menu" onClick={openModal}>
-                    <svg width="35" height="35" viewBox="0 0 24 24" fill="none" stroke="#111" stroke-width="2" stroke-linecap="butt" stroke-line-join="arcs"><line x1="3" y1="12" x2="21" y2="12"></line><line x1="3" y1="6" x2="21" y2="6"></line><line x1="3" y1="18" x2="21" y2="18"></line></svg>
+                    <svg width="35" height="35" viewBox="0 0 24 24" fill="none" stroke="#111" stroke-line-join="arcs"><line x1="3" y1="12" x2="21" y2="12"></line><line x1="3" y1="6" x2="21" y2="6"></line><line x1="3" y1="18" x2="21" y2="18"></line></svg>
                 </div>
             </div>
 

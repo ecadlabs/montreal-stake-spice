@@ -7,8 +7,6 @@ import {
 } from "react-router-dom";
 import Connect from './routes/connect';
 import Dashboard from './routes/dashboard';
-import Delegate from './routes/delegate';
-import EndDelegation from './routes/end-delegation';
 import { AccountInfo, BeaconEvent, NetworkType } from "@airgap/beacon-dapp";
 import { AppendLogParams } from "./types";
 import { useEffect, useState } from "react";
@@ -24,8 +22,8 @@ const Root = () => {
         console.log(params);
     }
 
-    const onActiveAccountSet = async (data: AccountInfo): Promise<void> => {
-        appendLog({ message: `Active account set: ${data.address}`, kind: 'info', data });
+    const onActiveAccountSet = async (_data: AccountInfo): Promise<void> => {
+        await refreshData();
     }
 
     const [activeAccount, setActiveAccount] = useState<AccountInfo | null>(null);
@@ -34,14 +32,7 @@ const Root = () => {
     const [delegate, setDelegate] = useState<string | null>(null);
     const [unstakeRequests, setUnstakeRequests] = useState<UnstakeRequestsResponse>(null);
 
-    const [wallet, setWallet] = useState<BeaconWallet>(new BeaconWallet({
-        name: "Staking dApp",
-        network: {
-            type: NetworkType.PARISNET,
-            rpcUrl: rpcUrl
-        }
-    }));
-
+    
     const createNewWallet = () => {
         return new BeaconWallet({
             name: "Staking dApp",
@@ -51,6 +42,8 @@ const Root = () => {
             }
         });
     }
+    
+    const [wallet, setWallet] = useState<BeaconWallet>(createNewWallet());
 
     const disconnectWallet = async () => {
         await wallet.clearActiveAccount();
@@ -64,31 +57,21 @@ const Root = () => {
 
     const location = window.location.pathname;
 
-    useEffect(() => {
-        console.log(`Location: ${location}`);
-    }, [location]);
-
     const navigate = useNavigate();
 
     let expectedPath = location;
 
     const initateTezosToolkit = async () => {
-        const wallet = new BeaconWallet({
-            name: "Staking dApp",
-            network: {
-                type: NetworkType.PARISNET,
-                rpcUrl: rpcUrl
-            }
-        });
+        const wallet = createNewWallet();
+        setWallet(wallet);
         await wallet.client.subscribeToEvent(BeaconEvent.ACTIVE_ACCOUNT_SET, onActiveAccountSet);
         const tezos = new TezosToolkit(rpcUrl);
         tezos.setWalletProvider(wallet);
         setTezosToolkit(tezos);
         await refreshData(tezos);
-        console.log(`expectedPath: ${expectedPath}`);
     }
 
-    const refreshData = async(tezos?: TezosToolkit) => {
+    const refreshData = async (tezos?: TezosToolkit) => {
         if (!tezos) {
             tezos = tezosToolkit!;
         }
@@ -129,21 +112,19 @@ const Root = () => {
         <Navigate to={expectedPath} />
     ) : (
         <Routes>
-            <Route path="/" element={<Connect wallet={wallet} />} />
+            <Route path="/" element={<Connect wallet={wallet} refreshData={() => refreshData().then(() => {})} />} />
             <Route path="/dashboard" element={
-                <Dashboard 
-                    address={activeAccount?.address} 
-                    wallet={wallet} 
-                    disconnect={disconnectWallet} 
-                    delegate={delegate} 
-                    balance={balance} 
-                    stakedBalance={stakedBalance} 
-                    unstakeRequests={unstakeRequests} 
+                <Dashboard
+                    address={activeAccount?.address}
+                    wallet={wallet}
+                    disconnect={disconnectWallet}
+                    delegate={delegate}
+                    balance={balance}
+                    stakedBalance={stakedBalance}
+                    unstakeRequests={unstakeRequests}
                     tezosToolkit={tezosToolkit!}
                     refreshData={initateTezosToolkit}
                 />} />
-            <Route path="/delegate" element={<Delegate tezosToolkit={tezosToolkit!} />} />
-            <Route path="/end-delegation" element={<EndDelegation />} />
         </Routes>
     );
 }
