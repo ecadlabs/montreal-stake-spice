@@ -1,8 +1,7 @@
-import { BeaconWallet } from "@taquito/beacon-wallet";
 import { useState } from "react";
 import { Action } from "../types";
 
-const ConnectionHeader = ({ address, wallet, disconnect }: { address: string | undefined, wallet: BeaconWallet, disconnect: Action<void> }) => {
+const ConnectionHeader = ({ address, disconnect }: { address: string | null, disconnect: Action<void> }) => {
     const [modalVisible, setModalVisible] = useState(false);
 
     const openModal = () => {

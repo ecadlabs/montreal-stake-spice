@@ -4,7 +4,7 @@ import './index.css'
 import App from './App'
 
 ReactDOM.createRoot(document.getElementById('root')!).render(
-  <React.StrictMode>
+  // <React.StrictMode>
     <>
       <App />
       <div className='footer'>
@@ -12,5 +12,5 @@ ReactDOM.createRoot(document.getElementById('root')!).render(
         <span>Powered by Tezos</span>
       </div>
     </>
-  </React.StrictMode>,
+  // </React.StrictMode>,
 )

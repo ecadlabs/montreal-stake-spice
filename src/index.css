@@ -15,7 +15,7 @@ body {
 }
 
 .root {
-  background-image: url('public/bg.svg');
+  background-image: url('bg.svg');
   background-size: cover;
   background-color: #ddd;
   display: flex;

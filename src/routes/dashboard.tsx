@@ -1,5 +1,4 @@
 import ConnectionHeader from "../components/connection-header";
-import { BeaconWallet } from "@taquito/beacon-wallet";
 import { Action } from "../types";
 import { UnstakeRequestsResponse } from "@taquito/rpc";
 import { formatTez } from "../helpers";
@@ -13,7 +12,6 @@ import EndDelegation from "../components/end-delegation";
 
 const Dashboard = ({
     address,
-    wallet,
     disconnect,
     balance,
     stakedBalance,
@@ -22,8 +20,7 @@ const Dashboard = ({
     tezosToolkit,
     refreshData,
 }: {
-    address: string | undefined,
-    wallet: BeaconWallet,
+    address: string | null,
     disconnect: Action<void>,
     balance: number | null,
     stakedBalance: number | null,
@@ -79,7 +76,7 @@ const Dashboard = ({
 
     return (
         <>
-            <ConnectionHeader address={address} wallet={wallet} disconnect={disconnect} />
+            <ConnectionHeader address={address} disconnect={disconnect} />
             <div className="main-container rounded-top not-too-narrow">
                 <div className="evenly-sized-items">
                     <div className="top-line">
