@@ -13,7 +13,7 @@ type RefData = {
 
 const Root = () => {
 
-    const rpcUrl = 'https://rpc.parisnet.teztnets.com/';
+    const rpcUrl = 'https://rpc.paris2net.teztnets.com/';
 
     const onActiveAccountSet = async (_data: AccountInfo): Promise<void> => {
         setActiveAccount(_data.address);
